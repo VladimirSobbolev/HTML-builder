@@ -51,9 +51,9 @@ async function getCSSContent() {
                     fs.appendFile(pathToBundle, data, (err) => {
                         if (err) {
                             console.error(err)
-                            return
+                            // return
                         }
-                        console.log('файл успешно перезаписан')
+
                     })
             })
             }
