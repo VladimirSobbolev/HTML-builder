@@ -31,8 +31,21 @@ rl.prompt();
 // слушатель line
 rl.on('line', function (answer) {
     if (answer.trim() === 'exit') rl.close() // выхожу
-    fs.appendFileSync(pathToFile, answer); // изменяю файл
-    fs.appendFileSync(pathToFile, '\n'); //добавляю перенос
+
+    fs.appendFile(pathToFile, answer + '\n', (err) => {
+        if (err) {
+            console.error(err)
+
+        }
+
+    })
+    // fs.appendFile(pathToFile, '\n', (err) => {
+    //     if (err) {
+    //         console.error(err)
+    //         return
+    //     }
+    //
+    // })
     rl.prompt(); // продолжаю процесс ввода
 })
 
