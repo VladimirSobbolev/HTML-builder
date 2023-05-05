@@ -7,6 +7,8 @@ const pathToProjectDist = path.join(__dirname, 'project-dist');
 const pathToTemplate = path.join(__dirname, 'template.html');
 const pathToAssets = path.join(__dirname, 'assets');
 const pathToComponents = path.join(__dirname, 'components');
+const pathToBundleCSS = path.join(pathToProjectDist, 'style.CSS');
+const pathToCSS = path.join(__dirname,'styles');// создал путь к файлаам css
 
 const createNewDir = (pathToNewDirectory) => {
     fs.mkdir(pathToNewDirectory, {recursive: true}, err => {
@@ -64,10 +66,11 @@ function readFile(pathToFile) {
 //     return readdir(pathToDirectory)
 // }
 
-
 // replace.data
 async function replaceDataAttribute(dataFromTemplate) {
 try {
+    fileHandler();
+    getCSSContent();
     const files = await readdir(pathToComponents); // получаю массив с файлами
     let newData = dataFromTemplate;
     for (const file of files) {
@@ -82,10 +85,6 @@ try {
             }
 
              newData = newData.replaceAll(fileName, data);
-            if(newData.includes('{{header}}')) {
-                console.log('sd')
-            }
-
             fs.writeFile(pathToNewIndex, newData, function(error){ // переписываю новый html
                 if(error) throw error; // если возникла ошибка
             });
@@ -97,18 +96,67 @@ try {
             }
 
             newData = newData.replaceAll(fileName, data);
-            if(newData.includes('{{header}}')) {
-                console.log('sd')
-            }
 
             fs.writeFile(pathToNewIndex, newData, function(error){ // переписываю новый html
                 if(error) throw error; // если возникла ошибка
             });
         })
-
     }
 }catch (err) {
         console.error(err);
     }
 }
 
+function fileHandler(){
+
+    fs.open(pathToBundleCSS, 'w', (err) => {
+        if(err) throw err;
+        console.log('File created');
+    });
+
+}
+
+// 03.Собирает в единый файл стили из папки styles и помещает их в файл project-dist/style.css.
+
+// let bundleCSS;
+//
+//
+// fs.access(pathToBundleCSS, (err) => {
+//     if (err) {
+//         bundleCSS = fs.createWriteStream(pathToBundleCSS)
+//         //создал новый файл
+//     } else {
+//         // fs.unlink(pathToBundleCSS, (err) => {
+//         //     if (err) console.log(err); // если возникла ошибка
+//         //     else {
+//         //         bundleCSS = fs.createWriteStream(pathToBundleCSS)
+//         //     }
+//         // });
+//     }
+// })
+//
+async function getCSSContent() {
+    try {
+        const files = await readdir(pathToCSS); // получаю массив с файлами
+        for (const file of files) {
+            const pathToFile = path.join(pathToCSS, file); //получаю путь до файла
+            const extension = path.extname(pathToFile); // получаю расширение
+            if (extension === '.css') {
+                fs.readFile(pathToFile, 'utf-8', (err, data) => {
+                    if (err) {
+                        console.error(err)
+                        return
+                    }
+                    fs.appendFile(pathToBundleCSS, data, (err) => {
+                        if (err) {
+                            console.error(err)
+                            // return
+                        }
+                    })
+                })
+            }
+        }
+    } catch (err) {
+        console.error(err);
+    }
+}
