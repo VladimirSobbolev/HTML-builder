@@ -13,7 +13,7 @@ const pathToCSS = path.join(__dirname, 'styles');// создал путь к ф�
 const createNewDir = (pathToNewDirectory) => {
     fs.mkdir(pathToNewDirectory, {recursive: true}, err => {
         if (err) {
-            console.log(err)
+            // console.log(err)
         }
         // console.log('Все папки успешно созданы');
     });
@@ -22,7 +22,7 @@ fs.access(pathToProjectDist, (err) => { // проверяю наличие па�
     if (err) {
         // если ее нет создаю новую
         createNewBundle();
-        console.log('папки не было')// сюда функционал
+       // сюда функционал
     } else {
         fs.rm(pathToProjectDist, //если есть то удаляю
             {recursive: true},
@@ -87,10 +87,12 @@ async function replaceDataAttribute(dataFromTemplate) {
         const files = await readdir(pathToComponents); // получаю массив с файлами
         let newData = dataFromTemplate;
         for (const file of files) {
+
             const pathToFile = path.join(pathToComponents, file); //получаю путь до файла
             const extension = path.extname(pathToFile);
 
             const fileName = `{{${file.slice(0, -extension.length)}}}`;
+
             fs.readFile(pathToFile, 'utf-8', (err, data) => {
                 if (err) {
                     console.error(err)
@@ -124,7 +126,7 @@ function fileHandler() {
 
     fs.open(pathToBundleCSS, 'w', (err) => {
         if (err) throw err;
-        console.log('File created');
+        // console.log('File created');
     });
 
 }
@@ -184,7 +186,7 @@ const pathToNewSVG = path.join(pathToNewAssets, 'svg');
 async function copyAssets(pathToAssets, pathToNewAssets) {
     try {
         const files = await readdir(pathToAssets); // получаю массив с файлами
-        console.log(files)
+        // console.log(files)
         for (const file of files) {
             const pathToFile = path.join(pathToAssets, file); //получаю путь до файла
             const pathToNewFile = path.join(pathToNewAssets, file);// получаю путь до ногого файла
